@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#https://github.com/docker/for-mac/issues/371
+DISK_IMAGE_DIR="${HOME}/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux"
+DISK_IMAGE_FILE=Docker.qcow2
+DISK_IMAGE_BACKUP="${DISK_IMAGE_FILE}.original"
+
+function fileSize {
+	echo $(du -sk "$1" | cut -f 1 -d $'\t')
+}
+
+function fileSizeH {
+	echo $(du -sh "$1" | cut -f 1 -d $'\t')
+}
+
+function fileSizeDetail {
+	echo "$(fileSizeH "$1") ($(fileSize "$1"))"
+}
+
+echo -e "${WARN_COLOR}Shrinking ${DISK_IMAGE_DIR}/${DISK_IMAGE_FILE}${RST_COLOR}"
+
+pushd "$DISK_IMAGE_DIR"
+echo -e $'\t'"${INFO_COLOR}Size before: $(fileSizeDetail "${DISK_IMAGE_FILE}")${RST_COLOR}"
+mv "${DISK_IMAGE_FILE}" "${DISK_IMAGE_BACKUP}"
+qemu-img convert -O qcow2 "${DISK_IMAGE_BACKUP}" "${DISK_IMAGE_FILE}"
+rm "${DISK_IMAGE_BACKUP}"
+echo -e $'\t'"${INFO_COLOR}Size after:  $(fileSizeDetail "${DISK_IMAGE_FILE}")${RST_COLOR}"
+popd

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [ "$(docker ps -a -q -f status=exited)" != "" ]; then
+	echo -e "${INFO_COLOR}Found exited containers. Removing...${RST_COLOR}"
+	docker rm -v $(docker ps -a -q -f status=exited)
+else
+	echo -e "${OK_COLOR}No exited containers images${RST_COLOR}"
+fi

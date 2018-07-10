@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#docker run -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker:/var/lib/docker --rm martin/docker-cleanup-volumes
+#Docker 1.9+ :
+if [ "$(docker volume ls -qf dangling=true)" != "" ]; then
+	echo -e "${INFO_COLOR}Found dangling volumes. Removing...${RST_COLOR}"
+	docker volume rm $(docker volume ls -qf dangling=true)
+else
+	echo -e "${OK_COLOR}No dangling volumes${RST_COLOR}"
+fi

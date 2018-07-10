@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+if [ "$(docker images --filter "dangling=true" -q --no-trunc)" != "" ]; then
+	echo -e "${INFO_COLOR}Found dangling images. Removing...${RST_COLOR}"
+	docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+else
+	echo -e "${OK_COLOR}No dangling images${RST_COLOR}"
+fi

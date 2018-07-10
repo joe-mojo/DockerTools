@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+source "log_color.env"
+
+docker_drmec
+docker_drmv
+docker_drmi
+
+while [ $# -gt 0 ]
+do
+	key="$1"
+
+	case $key in
+		-s|--shrink)
+		shift # past argument
+		docker_shrink_vm_disk
+		;;
+		*)
+		echo -e "${INFO_COLOR}Ignoring unknown option $key${RST_COLOR}"
+		shift # unknown option
+		;;
+	esac
+done
+
